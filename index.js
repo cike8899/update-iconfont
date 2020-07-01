@@ -17,7 +17,7 @@ const download = (url, dest) => {
     });
     res.on("end", () => {
       try {
-        if (dest === "assets.css") {
+        if (dest.endsWith("iconfont.css")) {
           const fontUrls = filterUrl(rawData);
           console.log(fontUrls);
           const nextUrls = fontUrls.map((x) => ({
@@ -38,4 +38,4 @@ const download = (url, dest) => {
 
 const cssKey = "font_1463774_58ziz8lisc2";
 
-download(`http://at.alicdn.com/t/${cssKey}.css`, "assets.css");
+download(`http://at.alicdn.com/t/${cssKey}.css`, "iconfont.css");
