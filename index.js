@@ -6,7 +6,7 @@ const path = require("path");
 const filterUrl = (str) =>
   str.match(/url\('\/\/at\.alicdn\.com[\/a-z_\d=?.#]+'\)/g);
 const download = (url, dest) => {
-  const file = fs.createWriteStream(path.join(process.cwd(), dest));
+  const file = fs.createWriteStream(dest);
   const req = http.get(url, function (res) {
     let rawData = "";
     res.on("data", (chunk) => {
@@ -14,9 +14,14 @@ const download = (url, dest) => {
     });
     res.on("end", () => {
       try {
+        // console.info("uuu:", rawData);
+        // if (!rawData.includes("@font-face")) {
+        //   console.warn("请输入正确的 css key");
+        //   return;
+        // }
         if (dest.endsWith("iconfont.css")) {
           const fontUrls = filterUrl(rawData);
-          console.log(fontUrls);
+          // console.log(fontUrls);
           const nextUrls = fontUrls
             .filter((x) => /^((?!iefix).)*$/.test(x))
             .map((x) => ({
@@ -33,18 +38,29 @@ const download = (url, dest) => {
             /(\/\/at\.alicdn\.com)([\S]+)(?=\.)/g,
             "iconfont"
           );
-          fs.writeFileSync(path.join(process.cwd(), dest), nextData);
+          console.info("kkk");
+          fs.writeFileSync(dest, nextData);
+          console.info("字体更新完成");
         }
       } catch (e) {
         console.error(e.message);
       }
     });
     if (!dest.endsWith("iconfont.css")) {
+      console.info("pppp");
       res.pipe(file);
     }
   });
 };
 
-const cssKey = "font_1463774_58ziz8lisc2";
+const main = (cssKey, dirname) => {
+  // const cssKey = "font_1463774_58ziz8lisc2";
+  try {
+    const dest = `${path.join(process.cwd(), dirname, "iconfont.css")}`;
+    download(`http://at.alicdn.com/t/${cssKey}.css`, dest);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-download(`http://at.alicdn.com/t/${cssKey}.css`, "iconfont.css");
+module.exports = main;
