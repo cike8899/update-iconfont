@@ -8,5 +8,6 @@
   },
   "repository": "git@github.com:cike8899/update-iconfont.git",
   "author": "balibabu",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }

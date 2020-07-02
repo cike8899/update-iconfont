@@ -5,7 +5,8 @@ const path = require("path");
 // 将字体文件过滤出来
 const filterUrl = (str) =>
   str.match(/url\('\/\/at\.alicdn\.com[\/a-z_\d=?.#]+'\)/g);
-const download = (url, dest) => {
+const download = (url, dirname, filename) => {
+  const dest = path.join(process.cwd(), dirname, filename);
   const file = fs.createWriteStream(dest);
   const req = http.get(url, function (res) {
     let rawData = "";
@@ -19,7 +20,7 @@ const download = (url, dest) => {
         //   console.warn("请输入正确的 css key");
         //   return;
         // }
-        if (dest.endsWith("iconfont.css")) {
+        if (filename === "iconfont.css") {
           const fontUrls = filterUrl(rawData);
           // console.log(fontUrls);
           const nextUrls = fontUrls
@@ -30,7 +31,7 @@ const download = (url, dest) => {
             }));
 
           nextUrls.forEach((x) => {
-            download(x.url, `iconfont${x.ext}`);
+            download(x.url, dirname, `iconfont${x.ext}`);
           });
 
           // 替换字体路径为本地
@@ -38,7 +39,7 @@ const download = (url, dest) => {
             /(\/\/at\.alicdn\.com)([\S]+)(?=\.)/g,
             "iconfont"
           );
-          console.info("kkk");
+          // console.info("kkk");
           fs.writeFileSync(dest, nextData);
           console.info("字体更新完成");
         }
@@ -46,8 +47,8 @@ const download = (url, dest) => {
         console.error(e.message);
       }
     });
-    if (!dest.endsWith("iconfont.css")) {
-      console.info("pppp");
+    if (filename !== "iconfont.css") {
+      // console.info("pppp");
       res.pipe(file);
     }
   });
@@ -56,8 +57,7 @@ const download = (url, dest) => {
 const main = (cssKey, dirname) => {
   // const cssKey = "font_1463774_58ziz8lisc2";
   try {
-    const dest = `${path.join(process.cwd(), dirname, "iconfont.css")}`;
-    download(`http://at.alicdn.com/t/${cssKey}.css`, dest);
+    download(`http://at.alicdn.com/t/${cssKey}.css`, dirname, "iconfont.css");
   } catch (error) {
     console.error(error);
   }
