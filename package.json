@@ -1,11 +1,14 @@
 {
   "name": "update-iconfont",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "download or update iconfont",
   "main": "index.js",
   "bin": {
     "udiconfont": "./bin/udicon.js"
   },
+  "keywords": [
+    "iconfont"
+  ],
   "repository": "git@github.com:cike8899/update-iconfont.git",
   "author": "balibabu",
   "license": "MIT",
