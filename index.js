@@ -2,11 +2,17 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
+const { mkdirsSync } = require("./util");
+
 // 将字体文件过滤出来
 const filterUrl = (str) =>
   str.match(/url\('\/\/at\.alicdn\.com[\/a-z_\d=?.#]+'\)/g);
 const download = (url, dirname, filename) => {
-  const dest = path.join(process.cwd(), dirname, filename);
+  const dir = path.join(process.cwd(), dirname);
+  if (!fs.existsSync(dir)) {
+    mkdirsSync(dir);
+  }
+  const dest = path.join(dir, filename);
   const file = fs.createWriteStream(dest);
   const req = http.get(url, function (res) {
     let rawData = "";
