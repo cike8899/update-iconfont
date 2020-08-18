@@ -1,6 +1,6 @@
 {
   "name": "update-iconfont",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "download or update iconfont",
   "main": "index.js",
   "bin": {
